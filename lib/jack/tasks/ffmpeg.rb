@@ -24,9 +24,9 @@ module Jack
           options = output
           output  = nil
         end
-        options = {:rate => 25, :acodec => :mp3, :frequency => 22050, :overwrite => true, :size => size, :file => (output || filename + ".flv")}.update(options)
+        options = {:rate => 25, :acodec => :mp3, :frequency => 22050, :overwrite => true, :size => size, :file => (output ||= filename + ".flv")}.update(options)
         ffmpeg filename, options
-        options[:file]
+        output
       end
       
       def grab_screenshot_from(filename, size, output = nil, options = {})
@@ -34,9 +34,9 @@ module Jack
           options = output
           output  = nil
         end
-        options = {:vframes => 1, :format => :image2, :disable_audio => true, :size => size, :file => (output || filename + ".jpg")}.update(options)
+        options = {:vframes => 1, :format => :image2, :disable_audio => true, :size => size, :file => (output ||= filename + ".jpg")}.update(options)
         ffmpeg filename, options
-        options[:file]
+        output
       end
       
       protected
