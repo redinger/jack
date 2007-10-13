@@ -4,6 +4,14 @@ require 'jack'
 require 'test/spec'
 require 'mocha'
 
+begin
+  require 'rubygems'
+  require 'ruby-debug'
+  Debugger.start
+rescue LoadError
+  puts $!.message
+end
+
 JACK = Object.new
 JACK.extend Jack::Tasks
 class << JACK

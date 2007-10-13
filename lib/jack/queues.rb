@@ -45,7 +45,9 @@ module Jack
       end
   
       def self.queue_task(name, options = {}, &block)
-        task = define_task(name, &block)
+        deps = options.delete(:before)
+        args = deps ? {name => deps} : name
+        task = define_task(args, &block)
         task.queue_name      = options.delete(:queue_name) || name
         task.options         = options
         task.connection_args = options.delete(:connect) || default_connection_args

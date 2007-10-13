@@ -55,6 +55,14 @@ context "Jack Queues" do
     @task.execute
   end
   
+  specify "should execute queue task with rake dependency" do
+    JACK.send :task, :pre_queue do
+    end
+    @task = JACK.process_queue :queue_task_with_dep, :before => :pre_queue do
+    end
+    @task.prerequisites.should == %w(pre_queue)
+  end
+  
   specify "should loop queue task" do
     @task = JACK.process_queue :queue_loop do
       if JACK.poke == 1
