@@ -1,6 +1,6 @@
 jack
-    by FIX (your name)
-    FIX (url)
+    by Rick Olson
+    http://rubyforge.org/projects/activereload
 
 == DESCRIPTION:
   
@@ -16,11 +16,14 @@ FIX (describe your package)
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* Rake
+* aws-s3 gem (optional)
+* ffmpeg (optional)
+* appcast (optional)
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* gem install jack
 
 == LICENSE:
 

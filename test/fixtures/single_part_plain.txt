@@ -1,0 +1,30 @@
+Return-Path: <rick@example.com>
+Received: from gate10.r4.iad.mlsrvr.com (gate10.r4.iad.mlsrvr.com [192.168.1.89])
+        by mail51a.mail.iad.mlsrvr.com (SMTP Server) with ESMTP id 4AB6D5A0088
+        for <ticket@example.com>; Thu,  5 Apr 2007 15:13:45 -0400 (EDT)
+X-Virus-Scanned: OK, catchall
+Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.235])
+        by gate10.r4.iad.mlsrvr.com (SMTP Server) with ESMTP id BEDF510B046B
+        for <ticket@example.com>; Thu,  5 Apr 2007 15:13:44 -0400 (EDT)
+Received: by nz-out-0506.google.com withSMTP id x7so403789nzc
+        for <ticket@example.com>; Thu, 05 Apr 2007 12:13:44 -0700 (PDT)
+Received: by 10.115.108.1 with SMTP id k1mr860170wam.1175800423716;
+        Thu, 05 Apr 2007 12:13:43 -0700 (PDT)
+Received: by 10.114.24.3 with HTTP; Thu, 5 Apr 2007 12:13:43 -0700 (PDT)
+Message-ID: <ddf0a08f0704051213y409747f5l4109b70f0268ff5b@mail.gmail.com>
+Date: Thu, 5 Apr 2007 14:13:43 -0500
+From: "Rick Olson" <rick@example.com>
+To: ticket@example.com
+Cc: bob@example.com
+Bcc: "Fred" <fred@example.com>, quentin@example.com
+Subject: test
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+Testing email stuff
+
+-- 
+Rick Olson
+http://example.com

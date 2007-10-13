@@ -1,3 +1,9 @@
+== 1.1.0 / 2007-10-13
+
+* Add IMAP queue (unfinished)
+* allow you to specify basic jack and queue tasks with jack_task and queue_task
+* allow you to specify rake prereqs in #process_queue with :before
+
 == 1.0.0 / 2007-08-25
 
 * 1 major enhancement
