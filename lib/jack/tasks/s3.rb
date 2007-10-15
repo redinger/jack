@@ -13,17 +13,26 @@ module Jack
         AWS::S3::S3Object.store name, open(filename), bucket, options
       end
       
-      def download_from_s3(name, bucket = nil)
+      def download_from_s3(s3_name, bucket = nil)
         bucket ||= default_s3_bucket
-        logger.info("[S3] Downloading #{name} from #{bucket}")
-        Dir.chdir s3_working_path do
+        logger.info("[S3] Downloading #{s3_name} from #{bucket}")
+        full_path = File.join(s3_working_path, s3_name)
+        name      = File.basename(full_path)
+        dir       = File.dirname(full_path)
+        FileUtils.mkdir_p dir
+        Dir.chdir dir do
           open name, 'w' do |file|
-            AWS::S3::S3Object.stream name, bucket do |chunk|
+            AWS::S3::S3Object.stream s3_name, bucket do |chunk|
               file.write chunk
             end
           end
         end
-        File.join s3_working_path, name
+        if block_given?
+          yield full_path
+          File.delete full_path
+        end
+        full_path
+        
       end
       
       def delete_from_s3(name, bucket = nil)

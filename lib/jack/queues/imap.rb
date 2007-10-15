@@ -77,6 +77,7 @@ module Jack
         attr_reader :number
       
         def initialize(number, raw = nil)
+          @from = @to = @cc = @bcc = nil
           @number  = number
           @raw     = raw
           return if @raw.nil?
