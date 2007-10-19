@@ -12,6 +12,38 @@ module ImapMessageSpecHelper
   end
 end
 
+context "IMAP Message (multi part, plain/text and html)" do
+  include ImapMessageSpecHelper
+  
+  before do
+    @message = messages(:exchange_multi_part_html)
+  end
+  
+  it "should parse from address" do
+    @message.from.should == %w(bob@example.com)
+  end
+  
+  it "should parse to address" do
+    @message.to.should == %w(ticket+sample@lighthouseapp.com)
+  end
+  
+  it "should parse parts" do
+    @message.msg.parts.size.should == 2
+  end
+  
+  it "should parse body" do
+    @message.bodies.size.should == 1
+  end
+  
+  it "should parse html bodies" do
+    @message.html_bodies.size.should == 1
+  end
+  
+  it "should parse attachments" do
+    @message.attachments.size.should == 1
+  end
+end
+
 context "IMAP Message (single part, plain/text)" do
   include ImapMessageSpecHelper
 
@@ -38,7 +70,15 @@ context "IMAP Message (single part, plain/text)" do
   it "should parse single part" do
     @message.bodies.size.should == 1
   end
+
+  it "should parse html bodies" do
+    @message.html_bodies.size.should == 0
+  end
   
+  it "should parse attachments" do
+    @message.attachments.size.should == 0
+  end
+
   it "should parse body content type" do
     @message.bodies.first.content_type.should == 'text/plain'
   end
