@@ -5,6 +5,13 @@ require 'tmail'
 module Jack
   module Queues
     module Imap
+      class Error < StandardError
+        def initialize(email, message)
+          @email = email
+          super(message)
+        end
+      end
+
       # :host, :port, :use_ssl, :user, :password
       def connection
         if @connection.nil? || @connection.disconnected?
@@ -19,9 +26,13 @@ module Jack
         if @messages.nil?
           @options[:limit] ||= 15
           in_mailbox @queue_name do
-            message_ids = search(@options[:search] ? @options[:search].split(' ') : %w(ALL))
-            @messages = connection.fetch(message_ids.size > @options[:limit] ? message_ids[0..@options[:limit]-1] : message_ids, 'RFC822')
-            @messages.collect! { |m| Message.new(m.seqno, m.attr['RFC822']) }
+            message_ids = search(@options[:search].to_s.split(' '))
+            if message_ids.size > 0
+              @messages = connection.fetch(message_ids.size > @options[:limit] ? message_ids[0..@options[:limit]-1] : message_ids, 'RFC822')
+              @messages.collect! { |m| Message.new(m.seqno, m.attr['RFC822']) }
+            else
+              @messages = []
+            end
           end
           logger.info("[Imap] Found #{@messages.size} message(s)")
         end
@@ -75,32 +86,41 @@ module Jack
         attr_reader :msg
         attr_reader :raw
         attr_reader :number
+        attr_reader :subject
+        attr_reader :from
+        attr_reader :to
+        attr_reader :cc
+        attr_reader :bcc
       
         def initialize(number, raw = nil)
-          @from = @to = @cc = @bcc = nil
+          @error = @from = @to = @cc = @bcc = nil
           @number  = number
           @raw     = raw
           return if @raw.nil?
           @msg         = TMail::Mail.parse(raw)
+          @subject     = @msg['subject'].to_s.strip
+          @from        = @msg['from'].addrs.collect { |a| a.local.strip } if @msg['from']
+          @to          = @msg['to'].addrs.collect { |a| a.local.strip }   if @msg['to']
+          @cc          = @msg['cc'].addrs.collect { |a| a.local.strip }   if @msg['cc']
+          @bcc         = @msg['bcc'].addrs.collect { |a| a.local.strip }  if @msg['bcc~']
           @bodies      = []
           @html_bodies = []
           @attachments = []
           process_parts
+        rescue Error
+          error!
+        end
+
+        def error!
+          @error = true
+        end
+
+        def error?
+          @error
         end
         
         def subject
-          @msg['subject']
-        end
-        
-        %w(from to cc bcc).each do |addy|
-          define_method addy do
-            value = instance_variable_get("@#{addy}")
-            if value.nil?
-              value = @msg[addy].addrs.collect { |a| a.local }
-              instance_variable_set("@#{addy}", value)
-            end
-            value
-          end
+          @subject ||= @msg['subject']
         end
       
         def body
@@ -123,6 +143,10 @@ module Jack
           end
           
           def process_body(part)
+            if part['content-type'].nil?
+              raise Error.new(self, "Malformed Headers")
+            end
+
             case part['content-type'].content_type
               when 'text/plain' then @bodies << part
               when 'text/html'  then @html_bodies << part

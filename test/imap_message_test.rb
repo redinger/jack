@@ -27,6 +27,10 @@ context "IMAP Message (multi part, plain/text and html)" do
     @message.to.should == %w(ticket+sample@lighthouseapp.com)
   end
   
+  it "should parse subject" do
+    @message.subject.should == 'problem with audio capture and usb pre-amps'
+  end
+  
   it "should parse parts" do
     @message.msg.parts.size.should == 2
   end
@@ -65,6 +69,10 @@ context "IMAP Message (single part, plain/text)" do
   
   it "should parse bcc address" do
     @message.bcc.should == %w(fred@example.com quentin@example.com)
+  end
+  
+  it "should parse subject" do
+    @message.subject.should == 'test'
   end
   
   it "should parse single part" do
