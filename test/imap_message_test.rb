@@ -12,7 +12,7 @@ module ImapMessageSpecHelper
   end
 end
 
-context "IMAP Message (multi part, plain/text and html)" do
+describe "IMAP Message (multi part, plain/text and html)" do
   include ImapMessageSpecHelper
   
   before do
@@ -48,7 +48,7 @@ context "IMAP Message (multi part, plain/text and html)" do
   end
 end
 
-context "IMAP Message (single part, plain/text)" do
+describe "IMAP Message (single part, plain/text)" do
   include ImapMessageSpecHelper
 
   before do
@@ -105,5 +105,22 @@ context "IMAP Message (single part, plain/text)" do
   
   it "should have no html bodies" do
     @message.html_bodies.should.be.empty
+  end
+end
+
+describe "IMAP Message" do
+  it "separates update text from reply text" do
+    msg = Jack::Queues::Imap::Message.new 1
+    delim = "=" * 50
+    {
+      "foo bar\n\n#{delim}\nfoo" => "foo bar", 
+      "foo\n  bar\nbaz\n\n\n> #{delim}" => "foo\n  bar\nbaz",
+      "foo\n\nbar\nbaz\n#{delim}" =>  "foo",
+      "foo\n  bar\nbaz2\n\n\n\n" => "foo\n  bar\nbaz2",
+      ">> #{delim}\n foo bar" => ""
+    }.each do |before, after|
+      msg.instance_variable_set :@body, before
+      msg.split_by_delimiter.should == after
+    end
   end
 end

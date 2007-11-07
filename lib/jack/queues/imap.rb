@@ -26,7 +26,7 @@ module Jack
         if @messages.nil?
           @options[:limit] ||= 15
           in_mailbox @queue_name do
-            message_ids = search(@options[:search].to_s.split(' '))
+            message_ids = search(*@options[:search].to_s.split(' '))
             if message_ids.size > 0
               @messages = connection.fetch(message_ids.size > @options[:limit] ? message_ids[0..@options[:limit]-1] : message_ids, 'RFC822')
               @messages.collect! { |m| Message.new(m.seqno, m.attr['RFC822']) }
@@ -37,6 +37,11 @@ module Jack
           logger.info("[Imap] Found #{@messages.size} message(s)")
         end
         @messages
+      end
+      
+      def delete_mailbox(mailbox)
+        logger.info("[Imap] Deleting mailbox: #{mailbox.inspect}")
+        connection.delete(mailbox)
       end
       
       def delete(message)
@@ -80,6 +85,9 @@ module Jack
       end
 
       class Message
+        class << self
+          attr_accessor :parsing_delimiter
+        end
         attr_reader :bodies
         attr_reader :html_bodies
         attr_reader :attachments
@@ -102,7 +110,7 @@ module Jack
           @from        = @msg['from'].addrs.collect { |a| a.local.strip } if @msg['from']
           @to          = @msg['to'].addrs.collect { |a| a.local.strip }   if @msg['to']
           @cc          = @msg['cc'].addrs.collect { |a| a.local.strip }   if @msg['cc']
-          @bcc         = @msg['bcc'].addrs.collect { |a| a.local.strip }  if @msg['bcc~']
+          @bcc         = @msg['bcc'].addrs.collect { |a| a.local.strip }  if @msg['bcc']
           @bodies      = []
           @html_bodies = []
           @attachments = []
@@ -130,6 +138,36 @@ module Jack
             else
               ''
             end
+        end
+
+        self.parsing_delimiter = ("=" * 50).freeze
+        # returns lines separated by = * 50
+        def split_by_delimiter(delimiter = self.class.parsing_delimiter)
+          return '' if body.nil? || body.empty?
+          lines = body.split("\n")
+          delim_line = last_line = found_empty = nil
+      
+          lines.each_with_index do |line, i|
+            next if delim_line
+            delim_line = i if line.include?(delimiter)
+          end
+      
+          while !last_line && delim_line.to_i > 0
+            delim_line = delim_line - 1
+            if found_empty
+              last_line = delim_line if lines[delim_line].strip.size > 0
+            else
+              found_empty = true if lines[delim_line].strip.size.zero?
+            end
+          end
+      
+          if last_line
+            lines[0..delim_line] * "\n"
+          elsif delim_line.nil?
+            body.strip
+          else
+            ''
+          end
         end
 
         protected
