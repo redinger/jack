@@ -108,10 +108,10 @@ module Jack
           return if @raw.nil?
           @msg         = TMail::Mail.parse(raw)
           @subject     = @msg['subject'].to_s.strip
-          @from        = @msg['from'].addrs.collect { |a| a.local.strip } if @msg['from']
-          @to          = @msg['to'].addrs.collect { |a| a.local.strip }   if @msg['to']
-          @cc          = @msg['cc'].addrs.collect { |a| a.local.strip }   if @msg['cc']
-          @bcc         = @msg['bcc'].addrs.collect { |a| a.local.strip }  if @msg['bcc']
+          @from        = process_message_addresses :from
+          @to          = process_message_addresses :to
+          @cc          = process_message_addresses :cc
+          @bcc         = process_message_addresses :bcc
           @bodies      = []
           @html_bodies = []
           @attachments = []
@@ -171,27 +171,39 @@ module Jack
           end
         end
 
-        protected
-          def process_parts(part = nil)
-            part ||= @msg
-            if part.parts.each do |p|
-              process_parts p
-            end.empty?
-              process_body part
-            end
+      protected
+        def process_parts(part = nil)
+          part ||= @msg
+          if part.parts.each do |p|
+            process_parts p
+          end.empty?
+            process_body part
           end
-          
-          def process_body(part)
-            if part['content-type'].nil?
-              raise Error.new(self, "Malformed Headers")
-            end
+        end
+        
+        def process_body(part)
+          if part['content-type'].nil?
+            raise Error.new(self, "Malformed Headers")
+          end
 
-            case part['content-type'].content_type
-              when 'text/plain' then @bodies << part
-              when 'text/html'  then @html_bodies << part
-              else @attachments << part
+          case part['content-type'].content_type
+            when 'text/plain' then @bodies << part
+            when 'text/html'  then @html_bodies << part
+            else @attachments << part
+          end
+        end
+        
+        def process_message_addresses(key)
+          field = @msg[key.to_s]
+          return if field.nil?
+          field.addrs.inject [] do |addresses, address|
+            if address.respond_to?(:local)
+              addresses << address.local.strip
+            else
+              addresses
             end
           end
+        end
       end
     end
   end

@@ -1,0 +1,36 @@
+Return-Path: <service101@bankofamerica.com>
+Received: from gate22.gate.sat.mlsrvr.com (gate22.gate.sat.mlsrvr.com [192.168.1.171])
+	by mail18b.mail.sat.mlsrvr.com (SMTP Server) with ESMTP id 690341B4006
+	for <ticket+powerserve.4101-wp3grw84@lighthouseapp.com>; Thu, 22 Nov 2007 15:27:39 -0500 (EST)
+X-Virus-Scanned: OK, catchall
+X-Originating-Ip: [12.146.242.55]
+Received: from s-homer.powerserve.net (s-homer.powerserve.net [12.146.242.55])
+	by gate22.gate.sat.mlsrvr.com (SMTP Server) with ESMTP id 014D51B576E
+	for <ticket+powerserve.4101-wp3grw84@lighthouseapp.com>; Thu, 22 Nov 2007 15:27:38 -0500 (EST)
+Received: from APSVRT_resolver ([76.199.142.18])
+        by s-homer.powerserve.net (Merak 8.3.8) with ESMTP id BFX89336
+        for <info@powerserve.net>; Thu, 22 Nov 2007 15:27:36 -0500
+Received: from User ([217.106.225.55]) by APSVRT_resolver with Microsoft SMTPSVC(5.0.2195.6713);
+	 Thu, 22 Nov 2007 12:27:13 -0800
+Reply-To: <service101@bankofamerica.com>
+From: "Bank of America Service"<service101@bankofamerica.com>
+Date: Thu, 22 Nov 2007 23:27:17 +0300
+MIME-Version: 1.0
+Content-Type: text/html;
+	charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <APSVRT_RESOLVERuGYn000008bf@APSVRT_resolver>
+X-OriginalArrivalTime: 22 Nov 2007 20:27:13.0851 (UTC) FILETIME=[1122C0B0:01C82D46]
+X-Spam: SpamAssassin=9.92,Body=02
+Subject: [Spam] Online Banking Profile Update Required.
+To: undisclosed-recipients:;
+
+<html>
+<body>
+<p>Blah Blah</p>
+</body>
+</html>
