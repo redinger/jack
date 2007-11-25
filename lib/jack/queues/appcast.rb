@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'vendor', 'appcast', 'lib'
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'vendor', 'appcast', 'lib')
 require 'appcast/client'
 
 module Jack
