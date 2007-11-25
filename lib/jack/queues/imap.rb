@@ -1,6 +1,6 @@
 require 'base64'
 require 'net/imap'
-gem 'TMail'
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'vendor', 'tmail', 'lib')
 require 'tmail'
 
 module Jack

@@ -17,9 +17,23 @@ FIX (describe your package)
 == REQUIREMENTS:
 
 * Rake
-* aws-s3 gem (optional)
+* open4
 * ffmpeg (optional)
-* appcast (optional)
+* TMail gem (optional)
+* aws-s3 gem (optional)
+* appcast gem (optional)
+* lockfile gem (optional)
+
+You can freeze the optional gems like so:
+
+  $ mkdir -p vendor/tmail
+  $ svn export http://tmail.rubyforge.org/svn/trunk/lib vendor/tmail/lib
+
+  $ mkdir -p vendor/aws-s3
+  $ svn export http://amazon.rubyforge.org/svn/s3/trunk/lib vendor/aws-s3/lib
+
+	$ mkdir -p vendor/appcast
+	$ svn export http://ar-code.svn.engineyard.com/appcast/trunk/lib vendor/appcast/lib
 
 == INSTALL:
 

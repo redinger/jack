@@ -1,3 +1,4 @@
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'vendor', 'aws-s3', 'lib'
 require 'aws/s3'
 
 module Jack

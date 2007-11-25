@@ -1,3 +1,5 @@
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'vendor', 'lockfile', 'lib'
+
 module Jack
   module Tasks
     module Locking
