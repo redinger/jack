@@ -2,7 +2,6 @@ require 'rubygems'
 require 'rake'
 require 'thread'
 require 'jack/tasks'
-$LOAD_PATH << File.join(File.dirname(__FILE__), 'vendor')
 
 module Jack
   VERSION = '1.0.0'

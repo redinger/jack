@@ -1,5 +1,6 @@
 require 'base64'
 require 'net/imap'
+gem 'TMail'
 require 'tmail'
 
 module Jack
