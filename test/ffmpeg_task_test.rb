@@ -2,10 +2,10 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 context "Jack::Tasks::Ffmpeg" do
   @@ffmpeg_answers = {
-    :dimensions => %w(480x360 640x480 960x528),
-    :duration   => [34, 407, 2616],
-    :fps        => [30.0, 29.97, 23.98],
-    :stream     => %w(0:6 0:0 0:0)
+    :dimensions => %w(480x360 640x480 960x528 480x360),
+    :duration   => [34, 407, 2616, 15],
+    :fps        => [30.0, 29.97, 23.98, 25],
+    :stream     => %w(0:6 0:0 0:0 0:6)
   }
   @@ffmpeg_examples = []
   @@ffmpeg_examples << <<-END
@@ -58,6 +58,28 @@ Input #0, avi, from '/Users/bob/Desktop/example3.avi':
   Stream #0.0: Video: mpeg4, yuv420p, 960x528, 23.98 fps(r)
   Stream #0.1: Audio: 0x2000, 48000 Hz, 5:1, 448 kb/s
 Must supply at least one output file
+END
+
+  @@ffmpeg_examples << <<-END
+Fmpeg version SVN-r11532, Copyright (c) 2000-2008 Fabrice Bellard, et al.
+  configuration: --prefix=/opt/local --prefix=/opt/local --disable-vhook --mandir=/opt/local/share/man --enable-shared --enable-pthreads --disable-mmx
+  libavutil version: 49.6.0
+  libavcodec version: 51.49.0
+  libavformat version: 52.4.0
+  libavdevice version: 52.0.0
+  built on Jan 22 2008 19:08:05, gcc: 4.0.1 (Apple Inc. build 5465)
+
+Seems stream 6 codec frame rate differs from container frame rate: 1000.00 (1000/1) -> 25.00 (25/1)
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/bob/Desktop/example3.avi':
+  Duration: 00:00:15.0, start: 0.000000, bitrate: 597 kb/s
+    Stream #0.0(eng): Data: 0x0000
+    Stream #0.1(eng): Data: 0x0000
+    Stream #0.2(eng): Video: mjpeg, yuvj444p, 480x360 [PAR 100:100 DAR 4:3],  0.33 tb(r)
+    Stream #0.3(eng): Data: text / 0x74786574
+    Stream #0.4(eng): Video: qtrle, rgb32, 32x2 [PAR 0:1 DAR 0:1],  0.33 tb(r)
+    Stream #0.5(eng): Data: 0x0000
+    Stream #0.6(eng): Video: mpeg4, yuv420p, 480x360 [PAR 1:1 DAR 4:3], 25.00 tb(r)
+    Stream #0.7(eng): Audio: mp4a / 0x6134706D, 44100 Hz, stereo
 END
   
   specify "should parse ffmpeg info output into hash" do

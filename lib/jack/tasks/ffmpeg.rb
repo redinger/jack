@@ -67,8 +67,8 @@ module Jack
         def find_dimensions_from(output, options)
           # sometimes videos have multiple video streams
           # attempt to guess the valid one by using the one with the highest fps
-          output.scan(/\#([\d\.]+)(\([^\)]+\))?: Video:[ \w,]* (\d+x\d+), ([\d\.]+) fps/).each do |result|
-            stream, dimensions, fps = result[0].sub(/\./, ':'), result[2], result[3].to_f
+          output.scan(/\#([\d\.]+)(\([^\)]+\))?: Video:[ \w,]* (\d+x\d+)( \[[^\]]+\])?, ([\d\.]+) (tb|fps)/).each do |result|
+            stream, dimensions, fps = result[0].sub(/\./, ':'), result[2], result[4].to_f
             if options[:fps].to_f <= fps
               options.update :dimensions => dimensions, :fps => fps, :stream => stream
             end
