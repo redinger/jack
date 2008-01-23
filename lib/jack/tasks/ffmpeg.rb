@@ -14,8 +14,9 @@ module Jack
       def movie_info_for(filename)
         output  = ffmpeg(filename).join("\n")
         returning({}) do |options|
-          find_dimensions_from output, options
-          find_duration_from   output, options
+          find_dimensions_from   output, options
+          find_duration_from     output, options
+          find_audio_stream_from output, options
         end
       end
       
@@ -63,6 +64,15 @@ module Jack
           cmd << "#{param == :input ? '-i ' : ''}#{File.expand_path(file)}" if file
           cmd
         end
+        
+        def find_audio_stream_from(output, options)
+          output.scan(/\#([\d\.]+)(\([^\)]+\))?: Audio:(.*)/).each do |result|
+            stream, freq = result[0].sub(/\./, ':'), result[2].to_s.scan(/(\d+ hz)/i)[0][0].to_i
+            if options[:frequency].to_i <= freq
+              options.update :frequency => freq, :audio_stream => stream
+            end
+          end
+        end
 
         def find_dimensions_from(output, options)
           # sometimes videos have multiple video streams
@@ -70,7 +80,7 @@ module Jack
           output.scan(/\#([\d\.]+)(\([^\)]+\))?: Video:[ \w,]* (\d+x\d+)( \[[^\]]+\])?, ([\d\.]+) (tb|fps)/).each do |result|
             stream, dimensions, fps = result[0].sub(/\./, ':'), result[2], result[4].to_f
             if options[:fps].to_f <= fps
-              options.update :dimensions => dimensions, :fps => fps, :stream => stream
+              options.update :dimensions => dimensions, :fps => fps, :video_stream => stream
             end
           end
         end

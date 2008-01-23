@@ -2,10 +2,11 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 
 context "Jack::Tasks::Ffmpeg" do
   @@ffmpeg_answers = {
-    :dimensions => %w(480x360 640x480 960x528 480x360),
-    :duration   => [34, 407, 2616, 15],
-    :fps        => [30.0, 29.97, 23.98, 25],
-    :stream     => %w(0:6 0:0 0:0 0:6)
+    :dimensions => %w(480x360 640x480 960x528 480x360 960x528),
+    :duration   => [34, 407, 2616, 15, 2616],
+    :fps        => [30.0, 29.97, 23.98, 25, 23.98],
+    :stream     => {:video => %w(0:6 0:0 0:0 0:6 0:0), :audio => %w(0:7 0:1 0:1 0:7)},
+    :frequency  => [44100, 44100, 48000, 44100, nil]
   }
   @@ffmpeg_examples = []
   @@ffmpeg_examples << <<-END
@@ -81,7 +82,21 @@ Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/bob/Desktop/example3.avi':
     Stream #0.6(eng): Video: mpeg4, yuv420p, 480x360 [PAR 1:1 DAR 4:3], 25.00 tb(r)
     Stream #0.7(eng): Audio: mp4a / 0x6134706D, 44100 Hz, stereo
 END
-  
+  @@ffmpeg_examples << <<-END
+FFmpeg version SVN-r9607, Copyright (c) 2000-2007 Fabrice Bellard, et al.
+  configuration: --enable-libmp3lame --enable-static --disable-vhook
+  libavutil version: 49.4.1
+  libavcodec version: 51.40.4
+  libavformat version: 51.12.1
+  built on Jul 12 2007 10:58:21, gcc: 4.0.1 (Apple Computer, Inc. build 5367)
+
+Seems stream 0 codec frame rate differs from container frame rate: 23.98 (65535/2733) -> 23.98 (24000/1001)
+Input #0, avi, from '/Users/bob/Desktop/example3.avi':
+  Duration: 00:43:35.7, start: 0.000000, bitrate: 2245 kb/s
+  Stream #0.0: Video: mpeg4, yuv420p, 960x528, 23.98 fps(r)
+Must supply at least one output file
+END
+
   specify "should parse ffmpeg info output into hash" do
     JACK.expects(:ffmpeg).with("/filename").returns(@@ffmpeg_examples.first.split("\n"))
     JACK.movie_info_for('/filename').class.should == Hash
@@ -151,7 +166,21 @@ END
   specify "should grab video stream #{}" do
     @@ffmpeg_examples.each_with_index do |ex, i|
       JACK.expects(:ffmpeg).with("/filename").returns(@@ffmpeg_examples[i].split("\n"))
-      JACK.movie_info_for('/filename')[:stream].should == @@ffmpeg_answers[:stream][i]
+      JACK.movie_info_for('/filename')[:video_stream].should == @@ffmpeg_answers[:stream][:video][i]
+    end
+  end
+  
+  specify "should grab audio stream #{}" do
+    @@ffmpeg_examples.each_with_index do |ex, i|
+      JACK.expects(:ffmpeg).with("/filename").returns(@@ffmpeg_examples[i].split("\n"))
+      JACK.movie_info_for('/filename')[:audio_stream].should == @@ffmpeg_answers[:stream][:audio][i]
+    end
+  end
+  
+  specify "should grab audio frequency #{}" do
+    @@ffmpeg_examples.each_with_index do |ex, i|
+      JACK.expects(:ffmpeg).with("/filename").returns(@@ffmpeg_examples[i].split("\n"))
+      JACK.movie_info_for('/filename')[:frequency].should == @@ffmpeg_answers[:frequency][i]
     end
   end
 end
