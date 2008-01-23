@@ -111,6 +111,11 @@ END
     JACK.expects(:ffmpeg).with('foo.mov', :vframes => 1, :format => :image2, :disable_audio => true, :size => '100x100', :file => 'foo.mov.jpg', :foo => :bar)
     JACK.grab_screenshot_from('foo.mov', '100x100', :foo => :bar).should == 'foo.mov.jpg'
   end
+  
+  specify "should add multiple params for array options" do
+    JACK.expects(:execute_command).with("ffmpeg -i #{File.expand_path('foo.mov')} -map 0:1 -map 0:2")
+    JACK.ffmpeg('foo.mov', :map => %w(0:1 0:2))
+  end
 
   specify "should return given screenshot filename after grabbing" do
     JACK.expects(:ffmpeg).with('foo.mov', :vframes => 1, :format => :image2, :disable_audio => true, :size => '100x100', :file => 'foo.jpg')

@@ -44,25 +44,31 @@ module Jack
         def ffmpeg_options(param, cmd, options)
           file = options.delete(:file)
           options.inject(cmd) do |c, (key, value)|
-            c << \
-              case key
-                when :duration  then "-t #{value}"
-                when :rate      then "-r #{value}"
-                when :bitrate   then "-b #{value}"
-                when :seek      then "-ss #{value}"
-                when :verbose   then "-v #{value == true ? :verbose : value}"
-                when :size      then "-s #{value}"
-                when :overwrite then "-y"
-                when :format    then "-f #{value}"
-                when :frequency then "-ar #{value}"
-                when :abitrate  then "-ab #{value}"
-                when :disable_video then "-vn"
-                when :disable_audio then "-an"
-                else "-#{key} #{value}"
-              end
+            c << translate_ffmpeg_option(key, value)
           end
           cmd << "#{param == :input ? '-i ' : ''}#{File.expand_path(file)}" if file
           cmd
+        end
+        
+        def translate_ffmpeg_option(key, value)
+          if value.is_a?(Array)
+            return value.inject([]) { |cmd, v| cmd << translate_ffmpeg_option(key, v) }.join(" ")
+          end
+          case key
+            when :duration  then "-t #{value}"
+            when :rate      then "-r #{value}"
+            when :bitrate   then "-b #{value}"
+            when :seek      then "-ss #{value}"
+            when :verbose   then "-v #{value == true ? :verbose : value}"
+            when :size      then "-s #{value}"
+            when :overwrite then "-y"
+            when :format    then "-f #{value}"
+            when :frequency then "-ar #{value}"
+            when :abitrate  then "-ab #{value}"
+            when :disable_video then "-vn"
+            when :disable_audio then "-an"
+            else "-#{key} #{value}"
+          end
         end
         
         def find_audio_stream_from(output, options)
