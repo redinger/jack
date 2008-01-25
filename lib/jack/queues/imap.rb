@@ -54,7 +54,7 @@ module Jack
       
       def search(*args, &block)
         args = %w(ALL) if args.empty?
-        connection.search *args
+        connection.search(*args)
       end
       
       def list_mailboxes(refname = '', mailbox = '*')

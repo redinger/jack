@@ -1,3 +1,10 @@
+== 1.2.0 / 2008-02-14
+
+* Update to use Rake 0.8's new #execute API.  Really sorry to all the Rake 0.7 lovers.
+* Rake is now optional.  Require 'jack/rake'.  It's now called automatically by 
+  Jack::Tasks#setup_queue and Jack::Tasks#jack_task too.  Otherwise, feel free to
+  just include Jack::Tasks in your non-rake classes.
+
 == 1.1.0 / 2007-10-13
 
 * Add IMAP queue (unfinished)

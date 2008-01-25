@@ -3,6 +3,7 @@ Manifest.txt
 README.txt
 Rakefile
 lib/jack.rb
+lib/jack/rake.rb
 lib/jack/queues.rb
 lib/jack/queues/appcast.rb
 lib/jack/queues/mock.rb
@@ -10,6 +11,8 @@ lib/jack/tasks.rb
 lib/jack/tasks/ffmpeg.rb
 lib/jack/tasks/locking.rb
 lib/jack/tasks/s3.rb
+test/ffmpeg_task_test.rb
+test/imap_message_test.rb
 test/queues_test.rb
 test/tasks_test.rb
 test/test_helper.rb

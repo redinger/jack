@@ -7,7 +7,7 @@ context "Jack Tasks" do
     end
 
     Thread.current[:task].should.be.nil
-    @task.execute
+    @task.invoke
     Thread.current[:task].should.be.nil
   end
   

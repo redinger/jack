@@ -30,7 +30,8 @@ module Jack
     end
     
     def jack_task(*args, &block)
-      Jack::Task.define_task *args, &block
+      require 'jack/rake'
+      Jack::Task.define_task(*args, &block)
     end
 
     include Jack::Tasks::Ffmpeg

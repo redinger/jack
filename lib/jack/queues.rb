@@ -1,3 +1,4 @@
+require 'jack/rake'
 module Jack
   module Queues
     def process_queue(queue_name, options = {}, &block)
@@ -5,7 +6,7 @@ module Jack
     end
     
     def queue_task(*args, &block)
-      Queues::Task.basic_queue_task *args, &block
+      Queues::Task.basic_queue_task(*args, &block)
     end
   
     def queue
@@ -24,10 +25,10 @@ module Jack
       def keep(*messages)
         messages.flatten!
         messages.uniq!
-        kept.push *messages
+        kept.push(*messages)
       end
     
-      def execute
+      def execute(args)
         # don't bother with the queue message loop for basic queue tasks
         if connection_args.nil? || queue_name.nil?
           super
@@ -36,7 +37,7 @@ module Jack
             if messages.empty?
               false
             else
-              super
+              super(args)
               (messages - kept).each do |msg|
                 delete msg
               end
@@ -54,7 +55,7 @@ module Jack
       end
   
       def self.basic_queue_task(*args, &block)
-        task = define_task *args, &block
+        task = define_task(*args, &block)
         task.connection_args = default_connection_args
         task
       end

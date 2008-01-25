@@ -8,7 +8,7 @@ context "Jack Queues" do
     end
     JACK.expects(:poke)
     @task.connection << [:msg]
-    @task.execute
+    @task.invoke
   end
   
   specify "should create message with current queue name" do
@@ -18,7 +18,7 @@ context "Jack Queues" do
     end
     JACK.expects(:poke)
     @task.connection << [:msg]
-    @task.execute
+    @task.invoke
     @task.created.should == [[:create, :foo]]
   end
   
@@ -29,7 +29,7 @@ context "Jack Queues" do
     end
     JACK.expects(:poke)
     @task.connection << [:msg]
-    @task.execute
+    @task.invoke
     @task.created.should == [[:foo, :bar]]
   end
   
@@ -52,7 +52,7 @@ context "Jack Queues" do
     end
     JACK.expects(:poke)
     @task.connection << [:msg, :keep] << [:msg2] # store messages
-    @task.execute
+    @task.invoke
   end
   
   specify "should execute queue task with rake dependency" do
@@ -73,7 +73,7 @@ context "Jack Queues" do
     end
     JACK.expects(:poke).times(2).returns(1,2)
     @task.connection << [:msg, :msg2] << [:msg3] # store messages
-    @task.execute
+    @task.invoke
     @task.messages.should.be.empty
   end
 end
