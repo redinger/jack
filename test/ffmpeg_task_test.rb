@@ -107,6 +107,11 @@ END
     JACK.grab_screenshot_from('foo.mov', '100x100').should == 'foo.mov.jpg'
   end
   
+  specify "should fix odd size dimensions" do
+    JACK.expects(:ffmpeg).with('foo.mov', :vframes => 1, :format => :image2, :disable_audio => true, :size => '100x98', :file => 'foo.mov.jpg')
+    JACK.grab_screenshot_from('foo.mov', '101x99').should == 'foo.mov.jpg'
+  end
+  
   specify "should return guessed screenshot filename after grabbing with options" do
     JACK.expects(:ffmpeg).with('foo.mov', :vframes => 1, :format => :image2, :disable_audio => true, :size => '100x100', :file => 'foo.mov.jpg', :foo => :bar)
     JACK.grab_screenshot_from('foo.mov', '100x100', :foo => :bar).should == 'foo.mov.jpg'

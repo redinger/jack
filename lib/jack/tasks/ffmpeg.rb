@@ -35,6 +35,16 @@ module Jack
           options = output
           output  = nil
         end
+
+        unless size =~ /^\d+x\d+$/
+          raise "Invalid size: #{size}"
+        end
+        
+        size = size.split('x').collect! do |d|
+          i = d.to_i
+          i % 2 == 0 ? i : i - 1
+        end.join('x')
+        
         options = {:vframes => 1, :format => :image2, :disable_audio => true, :size => size, :file => (output ||= filename + ".jpg")}.update(options)
         ffmpeg filename, options
         output
