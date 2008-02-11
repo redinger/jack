@@ -1,4 +1,4 @@
-== 1.2.0 / 2008-02-14
+== 1.2.0 / 2008-01-14
 
 * Update to use Rake 0.8's new #execute API.  Really sorry to all the Rake 0.7 lovers.
 * Rake is now optional.  Require 'jack/rake'.  It's now called automatically by 
