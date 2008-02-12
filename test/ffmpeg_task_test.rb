@@ -93,7 +93,7 @@ FFmpeg version SVN-r9607, Copyright (c) 2000-2007 Fabrice Bellard, et al.
 Seems stream 0 codec frame rate differs from container frame rate: 23.98 (65535/2733) -> 23.98 (24000/1001)
 Input #0, avi, from '/Users/bob/Desktop/example3.avi':
   Duration: 00:43:35.7, start: 0.000000, bitrate: 2245 kb/s
-  Stream #0.0: Video: mpeg4, yuv420p, 960x528, 23.98 fps(r)
+  Stream #0.0: Video: mpeg4, yuv420p, 960x528,  23.98  fps(r)
 Must supply at least one output file
 END
 
