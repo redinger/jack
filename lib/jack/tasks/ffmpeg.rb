@@ -25,7 +25,7 @@ module Jack
           options = output
           output  = nil
         end
-        options = {:rate => 25, :acodec => :mp3, :frequency => 22050, :overwrite => true, :size => size, :file => (output ||= filename + ".flv")}.update(options)
+        options = {:rate => 25, :acodec => :mp3, :frequency => 22050, :overwrite => true, :size => validate_and_fix_size(size), :file => (output ||= filename + ".flv")}.update(options)
         ffmpeg filename, options
         output
       end
@@ -35,17 +35,7 @@ module Jack
           options = output
           output  = nil
         end
-
-        unless size =~ /^\d+x\d+$/
-          raise "Invalid size: #{size}"
-        end
-        
-        size = size.split('x').collect! do |d|
-          i = d.to_i
-          i % 2 == 0 ? i : i - 1
-        end.join('x')
-        
-        options = {:vframes => 1, :format => :image2, :disable_audio => true, :size => size, :file => (output ||= filename + ".jpg")}.update(options)
+        options = {:vframes => 1, :format => :image2, :disable_audio => true, :size => validate_and_fix_size(size), :file => (output ||= filename + ".jpg")}.update(options)
         ffmpeg filename, options
         output
       end
@@ -129,6 +119,17 @@ module Jack
             logger.debug "[ffmpeg] ERROR: #{result.last}"
           end
           result
+        end
+        
+        def validate_and_fix_size(size)
+          unless size =~ /^\d+x\d+$/
+            raise "Invalid size: #{size}"
+          end
+          
+          size.split('x').collect! do |d|
+            i = d.to_i
+            i % 2 == 0 ? i : i - 1
+          end.join('x')
         end
     end
   end

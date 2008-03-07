@@ -107,9 +107,14 @@ END
     JACK.grab_screenshot_from('foo.mov', '100x100').should == 'foo.mov.jpg'
   end
   
-  specify "should fix odd size dimensions" do
+  specify "should fix odd size dimensions when grabbing screenshot" do
     JACK.expects(:ffmpeg).with('foo.mov', :vframes => 1, :format => :image2, :disable_audio => true, :size => '100x98', :file => 'foo.mov.jpg')
     JACK.grab_screenshot_from('foo.mov', '101x99').should == 'foo.mov.jpg'
+  end
+  
+  specify "should fix odd size dimensions when converting to flv" do
+    JACK.expects(:ffmpeg).with('foo.mov', :rate => 25, :acodec => :mp3, :frequency => 22050, :overwrite => true, :size => '100x98', :file => 'foo.mov.flv')
+    JACK.convert_to_flv('foo.mov', '101x99').should == 'foo.mov.flv'
   end
   
   specify "should return guessed screenshot filename after grabbing with options" do
@@ -173,21 +178,21 @@ END
     end
   end
   
-  specify "should grab video stream #{}" do
+  specify "should grab video stream" do
     @@ffmpeg_examples.each_with_index do |ex, i|
       JACK.expects(:ffmpeg).with("/filename").returns(@@ffmpeg_examples[i].split("\n"))
       JACK.movie_info_for('/filename')[:video_stream].should == @@ffmpeg_answers[:stream][:video][i]
     end
   end
   
-  specify "should grab audio stream #{}" do
+  specify "should grab audio stream" do
     @@ffmpeg_examples.each_with_index do |ex, i|
       JACK.expects(:ffmpeg).with("/filename").returns(@@ffmpeg_examples[i].split("\n"))
       JACK.movie_info_for('/filename')[:audio_stream].should == @@ffmpeg_answers[:stream][:audio][i]
     end
   end
   
-  specify "should grab audio frequency #{}" do
+  specify "should grab audio frequency" do
     @@ffmpeg_examples.each_with_index do |ex, i|
       JACK.expects(:ffmpeg).with("/filename").returns(@@ffmpeg_examples[i].split("\n"))
       JACK.movie_info_for('/filename')[:frequency].should == @@ffmpeg_answers[:frequency][i]
